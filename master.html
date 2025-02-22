@@ -8,12 +8,13 @@
         body {
             font-family: Verdana, sans-serif;
             margin: 20px;
-            background-color: #f9f9f;
+            background-color: #3a4247;
         }
 
         h1,
-        h2 {
-            color: #333;
+        h2,
+        h3{
+            color: #262626;
         }
 
         .wrapper {
@@ -24,7 +25,6 @@
 
         .column {
             flex: 1;
-            background-color: #26262626;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -59,7 +59,7 @@
             appearance: none;
             width: 16px;
             height: 16px;
-            background: #000;
+            background: #3e464c;
             transform: rotate(45deg);
             border: none;
         }
@@ -79,7 +79,7 @@
         }
 
         .info-section {
-            background-color: #2222;
+            background-color: #e6e9ea;
             border: 1px solid black;
             border-radius: 8px;
             padding: 20px;
@@ -87,7 +87,40 @@
         }
 
         .info-section h3 {
-            color: #fffff;
+            color: #000;
+        }
+
+        .share-container {
+            margin-top: 20px;
+        }
+
+        .share-button {
+            padding: 10px 20px;
+            margin: 3px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .telegram {
+            background-color: #0088cc;
+            color: white;
+        }
+
+        .whatsapp {
+            background-color: #25d366;
+            color: white;
+        }
+
+        .email {
+            background-color: #d44638;
+            color: white;
+        }
+
+        .pdf {
+            background-color: #555;
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -95,9 +128,63 @@
                 flex-direction: column;
             }
         }
-        
     </style>
+</head>
+<body>
+    <div class="info-section">
+        <h1>The Kinky Play List</h1>
+        <p>MUse the sliders to express your preferences and consent for each kinky activity:</p>
+        <strong>Me</strong> = wIndicates what you enjoy doing.<p></p>
+        <strong>Partner</strong> = Indicates what you enjoy when your partner does it.<p></p>
+
+            Left position = <strong>Hard Limit</strong>
+            <br>
+            2nd position = <strong>Curious</strong>
+             <br>
+            3rd position = <strong>Moderate</strong>
+             <br>
+            Right position = <strong>Oh Yes</strong>
+    </div>
+
+    <!-- Safe Words Section -->
+    <div class="info-section">
+        <h3>Safe Words</h3>
+        <p>Safe words are essential for maintaining consent and communication during BDSM activities. Commonly used safe words include:</p>
+ 
+        <strong>Green</strong>: Everything is okay, continue.
+        <br>
+        <br>
+        <strong>Yellow</strong>: Slow down or check-in; something is uncomfortable.
+        <br>
+        <br>
+        <strong>Red</strong>: Stop immediately; the activity must end.
+        <p>Make sure both partners clearly agree on the safe words before starting any scene.</p>
+    </div>
+
+    <!-- Aftercare Section -->
+    <div class="info-section">
+        <h3>Aftercare</h3>
+        <p>Aftercare is the time taken after a scene to ensure both partners feel emotionally and physically supported. It can include:</p>
+        <ul>
+            <li>Providing water, snacks, or a blanket.</li>
+            <li>Gently cuddling or holding each other.</li>
+            <li>Discussing the scene and sharing feelings.</li>
+            <li>Taking care of any physical marks or injuries.</li>
+        </ul>
+        <p>Aftercare is unique to every individual, so discuss and plan it beforehand with your partner.</p>
+    </div>
+
+    <!-- Share Section -->
+    <div class="share-container">
+        <div class="info-section">
+        <h2>Share Your Preferences</h2>
+        <button class="share-button telegram" onclick="shareViaTelegram()">Share via Telegram</button>
+        <button class="share-button whatsapp" onclick="shareViaWhatsApp()">Share via WhatsApp</button>
+        <button class="share-button email" onclick="shareViaEmail()">Share via Email</button>
+    </div>
+
     <script>
+        // Update slider preferences
         function updatePreference(slider, preferenceDisplay) {
             const value = slider.value;
             let preference = '';
@@ -118,100 +205,59 @@
                     preference = 'Not Entered';
             }
             preferenceDisplay.textContent = preference;
+            updateURL();
+        }
+
+        // Update URL with slider values
+        function updateURL() {
+            const sliders = document.querySelectorAll('.slider');
+            const params = new URLSearchParams();
+            sliders.forEach((slider, index) => {
+                params.set(`slider${index + 1}`, slider.value);
+            });
+            const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+            window.history.replaceState(null, '', url);
+        }
+
+        // Get slider values from URL
+        function getSliderValuesFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const sliders = document.querySelectorAll('.slider');
+            sliders.forEach((slider, index) => {
+                const value = params.get(`slider${index + 1}`);
+                if (value !== null) {
+                    slider.value = value;
+                    updatePreference(slider, slider.nextElementSibling);
+                }
+            });
+        }
+
+        // Initialize slider values from URL
+        getSliderValuesFromURL();
+
+        // Share via Telegram
+        function shareViaTelegram() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out my kinky preferences!");
+            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+        }
+
+        // Share via WhatsApp
+        function shareViaWhatsApp() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out my kinky preferences!");
+            window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+        }
+
+        // Share via Email
+        function shareViaEmail() {
+            const url = encodeURIComponent(window.location.href);
+            const subject = encodeURIComponent("My Kinky Preferences");
+            const body = encodeURIComponent("Check out my kinky preferences: " + url);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
         }
     </script>
-</head>
-<body>
-    <div class="info-section">
-    <h1>The Kinky Play List</h1>
-    <p>Move the sliders to the desired position, to indicate if you enjoy/consent to each of these kinky activities.</p>
-    <p>Me = what I enjoy to do.</p>  
-    <p>Partner = what I enjoy what my partner does.</p>  
-    <ul>
-        <li>Left position = <strong>No</strong></li>
-        <li>2nd position = <strong>Curious</strong></li>
-        <li>3rd position = <strong>Moderate</strong></li>
-        <li>Right position = <strong>Yes</strong></li>
-    </ul>
-
-    <!-- Safe Words Section -->
-    <div class="info-section">
-        <h3>Safe Words</h3>
-        <p>Safe words are essential for maintaining consent and communication during BDSM activities. Commonly used safe words include:</p>
-        <ul>
-            <li><strong>Green</strong>: Everything is okay, continue.</li>
-            <li><strong>Yellow</strong>: Slow down or check-in; something is uncomfortable.</li>
-            <li><strong>Red</strong>: Stop immediately; the activity must end.</li>
-        </ul>
-        <p>Make sure both partners clearly agree on the safe words before starting any scene.</p>
-    </div>
-    <!-- Aftercare Section -->
-    <div class="info-section">
-        <h3>Aftercare</h3>
-        <p>Aftercare is the time taken after a scene to ensure both partners feel emotionally and physically supported. It can include:</p>
-        <ul>
-            <li>Providing water, snacks, or a blanket.</li>
-            <li>Gently cuddling or holding each other.</li>
-            <li>Discussing the scene and sharing feelings.</li>
-            <li>Taking care of any physical marks or injuries.</li>
-        </ul>
-        <p>Aftercare is unique to every individual, so discuss and plan it beforehand with your partner.</p>
-    <ul>
-    </div>
-  
-    <!-- Action Buttons -->
-        <div class="info-section">
-   </style>
-</head>
-<body>
-    <div class="share-container">
-        <div class="share-content" id="shareContent">
-            <h2>Share This Message</h2>
-            <p>This is an example message you can share via Telegram, WhatsApp, Email, or download as a PDF.</p>
-        </div>
-        <button class="share-button telegram" id="shareTelegram">Share via Telegram</button>
-        <button class="share-button whatsapp" id="shareWhatsApp">Share via WhatsApp</button>
-        <button class="share-button email" id="shareEmail">Share via Email</button>
-        <button class="share-button pdf" id="downloadPDF">Download as PDF</button>
-    </div>
-
-    <script>
-        // Telegram share
-        document.getElementById("shareTelegram").addEventListener("click", () => {
-            const message = encodeURIComponent(document.getElementById("shareContent").innerText.trim());
-            const telegramURL = `https://t.me/share/url?url=&text=${message}`;
-            window.open(telegramURL, "_blank");
-        });
-
-        // WhatsApp share
-        document.getElementById("shareWhatsApp").addEventListener("click", () => {
-            const message = encodeURIComponent(document.getElementById("shareContent").innerText.trim());
-            const whatsappURL = `https://wa.me/?text=${message}`;
-            window.open(whatsappURL, "_blank");
-        });
-
-        // Email share
-        document.getElementById("shareEmail").addEventListener("click", () => {
-            const subject = encodeURIComponent("Check this out!");
-            const body = encodeURIComponent(document.getElementById("shareContent").innerText.trim());
-            const mailtoURL = `mailto:?subject=${subject}&body=${body}`;
-            window.location.href = mailtoURL;
-        });
-
-        // Download as PDF
-        document.getElementById("downloadPDF").addEventListener("click", () => {
-            const content = document.getElementById("shareContent").innerText.trim();
-            const pdfBlob = new Blob([content], { type: "application/pdf" });
-            const pdfURL = URL.createObjectURL(pdfBlob);
-            const link = document.createElement("a");
-            link.href = pdfURL;
-            link.download = "shared-content.pdf";
-            link.click();
-        });
-    </script>
-    </div>
-    <br>
-    <div class="info-section">
+ <div class="info-section">
     <div class="wrapper">
         <!-- Me Column -->
         <div class="column">
@@ -1209,7 +1255,7 @@
                <span class="preference">No</span>
             </div <div>
        </div>    
-                    </div>
+    </div>
         <!-- Partner Column -->
         <div class="column">
             <h2>Partner</h2>
@@ -2204,9 +2250,4 @@
                <span class="item-label">Publishable Sexual Acts </span>
                <input type="range" min="0" max="3" value="0" class="slider" onchange="updatePreference(this, this.nextElementSibling)">
                <span class="preference">No</span>
-            </div <div>
-       </div>  
-        </div>
-    </div>
-</body>
-</html>
+<html></html>
